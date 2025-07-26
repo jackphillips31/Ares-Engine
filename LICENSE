@@ -1,0 +1,104 @@
+ARES ENGINE LICENSE (JPGE LICENSE)
+Version 1.0 – July 26, 2025
+
+Copyright © 2025 Jack Phillips. All rights reserved.
+
+This License governs use of the software known as the "Ares Engine"
+(the “Software”). By obtaining, using, or distributing any part of the
+Software, you agree to the terms of this License.
+
+1. DEFINITIONS
+1.1 “Software” refers to the Ares Engine, including source code,
+    binaries, build files, documentation, and any derivative works.
+1.2 “Licensee” or “You” refers to the individual or entity accessing or
+    using the Software.
+1.3 “Game” refers to any software product developed using the Software
+    as a game engine or runtime framework.
+1.4 “Commercial Use” means any use of the Software or resulting Game
+    that generates or is intended to generate revenue, whether through
+    direct sales, subscriptions, advertising, donations, in-game
+    purchases, or any other form of monetization.
+
+2. GRANT OF LICENSE
+Subject to the terms of this License, the Licensor (Jack Phillips)
+hereby grants the Licensee a non-exclusive, non-transferable,
+non-sublicensable, and revocable license to:
+(a) Use the Software solely for the development of Games.
+(b) Modify the Software for personal or internal use within Game
+    development projects.
+(c) Submit contributions to the official repository, subject to Section
+    7 below.
+
+3. RESTRICTIONS
+The Licensee shall not:
+(a) Reproduce, redistribute, publish, or host the Software, in whole or
+    in part, in either source or binary form, modified or unmodified,
+    outside of the official repository, without prior written permission
+    from the Licensor.
+(b) Use the Software as the basis for developing a competing game
+    engine, framework, toolkit, or software development platform.
+(c) Commercially distribute any Game built using the Software without
+    entering into a separate commercial license agreement with the
+    Licensor.
+(d) Remove, alter, or obscure any copyright notices or other proprietary
+    rights notices included in the Software.
+
+4. NON-COMMERCIAL USE
+The Licensee may use the Software to create and distribute Games for
+personal, academic, or experimental purposes, provided no revenue is
+generated from such Games. No royalties or commercial agreement are
+required for such non-commercial use.
+
+5. COMMERCIAL USE AND ROYALTIES
+If the Licensee intends to release or distribute a Game for profit,
+whether directly or indirectly, the Licensee must:
+(a) Obtain a commercial license from the Licensor prior to any
+    commercial release.
+(b) Enter into a separate agreement specifying any applicable royalties,
+    fees, or other commercial terms.
+
+Failure to obtain a commercial license prior to commercial distribution
+constitutes a breach of this License and may result in legal enforcement
+and liability for damages.
+
+6. INTELLECTUAL PROPERTY
+All rights, title, and interest in and to the Software, including all
+intellectual property rights, are and shall remain the exclusive
+property of the Licensor. Nothing in this License shall be construed to
+transfer any ownership interest to the Licensee.
+
+7. CONTRIBUTIONS
+Any code, patches, suggestions, or other contributions submitted to the
+official repository are provided under a non-exclusive, perpetual,
+irrevocable license to the Licensor, who may incorporate, modify,
+sublicense, or redistribute such contributions as part of the Software.
+The Licensee retains ownership of their contributions but waives any
+right to compensation or attribution unless otherwise agreed in writing.
+
+8. TERMINATION
+This License is effective until terminated. It will automatically
+terminate if the Licensee fails to comply with any provision of this
+License. Upon termination, the Licensee must cease all use of the
+Software and destroy all copies in their possession. The Licensor may
+also terminate this License at their sole discretion by providing
+written notice.
+
+9. DISCLAIMER OF WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THE ENTIRE RISK
+AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH THE LICENSEE.
+
+10. LIMITATION OF LIABILITY
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY DAMAGES WHATSOEVER,
+INCLUDING BUT NOT LIMITED TO DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES, ARISING OUT OF OR IN CONNECTION
+WITH THE USE OR INABILITY TO USE THE SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+11. CONTACT
+For commercial licensing inquiries, please contact:
+Jack Phillips  
+Email: jack.p.phillips@gmail.com
+
+END OF LICENSE
