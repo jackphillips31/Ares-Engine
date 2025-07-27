@@ -1,0 +1,19 @@
+# IDE related
+.vscode
+
+# Visual Studio files
+*.vcxproj*
+*.sln
+*.user
+*.filters
+*.opensdf
+*.sdf
+*.vcxproj.*
+
+# CMAKE related
+build/
+CMakeFiles/
+CMakeCache.txt
+
+# Built Binaries
+bin/
