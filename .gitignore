@@ -1,5 +1,6 @@
 # IDE related
 .vscode
+.vs
 
 # Visual Studio files
 *.vcxproj*
@@ -14,6 +15,6 @@
 build/
 CMakeFiles/
 CMakeCache.txt
+cmake_install.cmake
 
-# Built Binaries
 bin/
