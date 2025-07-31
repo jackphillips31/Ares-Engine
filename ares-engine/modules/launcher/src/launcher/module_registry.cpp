@@ -1,4 +1,4 @@
-#include "entry_point/module_registry.h"
+#include "launcher/module_registry.h"
 
 module_registry& module_registry::get()
 {

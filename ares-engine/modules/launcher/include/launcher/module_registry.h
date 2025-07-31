@@ -1,5 +1,5 @@
-#ifndef ARES_MODULE_REGISTRY_H
-#define ARES_MODULE_REGISTRY_H
+#ifndef ARES_LAUNCHER_MODULE_REGISTRY_H
+#define ARES_LAUNCHER_MODULE_REGISTRY_H
 #include <string>
 #include <unordered_map>
 #include <functional>
@@ -26,4 +26,4 @@ private:
 	std::unordered_map<std::string, module_factory> m_factories;
 };
 
-#endif // ARES_MODULE_REGISTRY_H
+#endif // ARES_LAUNCHER_MODULE_REGISTRY_H

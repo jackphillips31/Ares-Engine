@@ -62,7 +62,7 @@ if(ENABLE_IDE_FOLDERS)
 endif()
 
 # Add subdirectories
-add_subdirectory(modules/entry_point)
+add_subdirectory(modules/launcher)
 add_subdirectory(modules/core)
 
 # Add project
@@ -144,8 +144,8 @@ target_include_directories(${ARES_PROJECT_NAME_UNDERSCORE}
 	PRIVATE ${ARES_PROJECT_DIR}/src
 )
 
-# Link against entry-point
-target_link_libraries(${ARES_PROJECT_NAME_UNDERSCORE} PRIVATE ares_entry_point)
+# Link against launcher and modules
+target_link_libraries(${ARES_PROJECT_NAME_UNDERSCORE} PRIVATE ares_launcher)
 foreach(lib IN LISTS ARES_PROJECT_CONFIG_LIST)
 	target_link_libraries(${ARES_PROJECT_NAME_UNDERSCORE} PRIVATE ares_${lib})
 endforeach()

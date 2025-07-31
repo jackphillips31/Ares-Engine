@@ -1,4 +1,4 @@
-#ifndef ARES_MAIN_H
+#ifndef ARES_LAUNCHER_ENTRY_POINT_H
 #define ARES_MAIN_H
 
 int ares_main(int argc, char** argv)
@@ -11,4 +11,4 @@ int main(int argc, char** argv)
 	return ares_main(argc, argv);
 }
 
-#endif // ARES_MAIN_H
+#endif // ARES_LAUNCHER_ENTRY_POINT_H

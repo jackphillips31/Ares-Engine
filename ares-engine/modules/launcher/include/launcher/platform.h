@@ -1,5 +1,5 @@
-#ifndef ARES_PLATFORM_H
-#define ARES_PLATFORM_H
+#ifndef ARES_LAUNCHER_PLATFORM_H
+#define ARES_LAUNCHER_PLATFORM_H
 
 /******************************************************/
 /*     Platform detection using predefined macros     */
@@ -527,4 +527,4 @@
 /*              End of platform detection             */
 /******************************************************/
 
-#endif // ARES_PLATFORM_H
+#endif // ARES_LAUNCHER_PLATFORM_H
