@@ -5,7 +5,7 @@ cmake_policy(SET CMP0156 NEW)
 cmake_policy(SET CMP0179 NEW)
 
 # Create the library
-if(ENABLE_STATIC_BUILD)
+if(ARES_ENABLE_STATIC_BUILD)
 	add_library(ares_core STATIC)
 else()
 	add_library(ares_core SHARED)
@@ -46,7 +46,11 @@ target_include_directories(ares_core
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-
+# 3rd Party Libraries
+target_link_libraries(ares_core
+	PUBLIC
+		EASTL
+)
 
 # Properties
 set_target_properties(ares_core PROPERTIES FOLDER "modules")

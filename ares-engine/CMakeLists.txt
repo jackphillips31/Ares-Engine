@@ -1,3 +1,7 @@
+#/******************************************************/
+#/*                 Basic Configuration                */
+#/******************************************************/
+
 cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -6,21 +10,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "Configuring...")
 
 # Define options
-option(ENABLE_MIN_SIZE_RELEASE "Enable a min-size release build." ON)
-option(ENABLE_EXTRA_OPTIMIZATIONS "Enable extra optimizations for the release build." ON)
-option(ENABLE_IDE_FOLDERS "Enable IDE folder grouping (e.g., Visual Studio filters)." ON)
-option(ENABLE_STATIC_BUILD "Enable static build for release." OFF)
+option(ARES_ENABLE_MIN_SIZE_RELEASE "Enable a min-size release build." ON)
+option(ARES_ENABLE_EXTRA_OPTIMIZATIONS "Enable extra optimizations for the release build." ON)
+option(ARES_ENABLE_IDE_FOLDERS "Enable IDE folder grouping (e.g., Visual Studio filters)." ON)
+option(ARES_ENABLE_STATIC_BUILD "Enable static build for release." OFF)
 set(ARES_PROJECT_DIR "${CMAKE_SOURCE_DIR}/sample_project" CACHE STRING "Path to the project using Ares.")
 set(ARES_PROJECT_NAME "Ares-Sample-Project" CACHE STRING "Name of the Ares project.")
 set(ARES_PROJECT_NAME_UNDERSCORE "")
 
 # Definitions
-if(ENABLE_STATIC_BUILD)
+if(ARES_ENABLE_STATIC_BUILD)
 	add_compile_definitions(ARES_STATIC_BUILD)
 endif()
+add_compile_definitions(
+	$<$<CONFIG:Debug>:ARES_BUILD_DEBUG=1>
+	$<$<CONFIG:Release>:ARES_BUILD_RELEASE=1>
+	$<$<CONFIG:RelWithDebInfo>:ARES_BUILD_DEBUG=1>
+	$<$<CONFIG:MinSizeRel>:ARES_BUILD_RELEASE=1>
+)
 
 if (WIN32)
-	option(ENABLE_CONSOLE_APP "Build entry-point as a console application rather than windowed (Windows only)." ON)
+	option(ARES_ENABLE_CONSOLE_APP "Build entry-point as a console application rather than windowed (Windows only)." ON)
 endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/debug)
@@ -35,14 +45,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/debug/modules)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/release/modules)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_SOURCE_DIR}/bin/debug-release/modules)
 
-if(ENABLE_MIN_SIZE_RELEASE)
+if(ARES_ENABLE_MIN_SIZE_RELEASE)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_SOURCE_DIR}/bin/min-release)
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_SOURCE_DIR}/bin/min-release/lib)
 	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_SOURCE_DIR}/bin/min-release/modules)
 endif()
 
 # Extra optimization tweaks for release builds (acts as distribution build)
-if(ENABLE_EXTRA_OPTIMIZATIONS)
+if(ARES_ENABLE_EXTRA_OPTIMIZATIONS)
 	message(STATUS "Configuring extra release optimizations...")
 	if(MSVC)
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /02 /GL")
@@ -54,16 +64,74 @@ if(ENABLE_EXTRA_OPTIMIZATIONS)
 endif()
 
 # Fetch dependencies
-# include(FetchContent)
+include(FetchContent)
+
+message(STATUS "Fetching dependencies...")
+message(STATUS "Fetching EABase...")
+FetchContent_Declare(
+	EABase
+	GIT_REPOSITORY https://github.com/electronicarts/EABase.git
+	GIT_TAG 123363eb82e132c0181ac53e43226d8ee76dea12
+	GIT_SUBMODULES ""
+	SOURCE_DIR ${CMAKE_SOURCE_DIR}/libraries/EABase
+)
+FetchContent_MakeAvailable(EABase)
+
+if(TARGET EABase)
+	message(STATUS "Configuring EABase...")
+
+	target_compile_definitions(EABase INTERFACE
+		$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:
+			EA_ASSERT_ENABLED=1
+			EA_DEBUG=1
+		>
+		$<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>>:
+			EA_ASSERT_ENABLED=0
+			EA_DEBUG=0
+		>
+	)
+endif()
+
+message(STATUS "Fetching EASTL...")
+FetchContent_Declare(
+	EASTL
+	GIT_REPOSITORY https://github.com/electronicarts/EASTL.git
+	GIT_TAG 7fadbf0da01e6f6e0e7038b1b34343a069b8fc51
+	SOURCE_DIR ${CMAKE_SOURCE_DIR}/libraries/EASTL
+)
+FetchContent_MakeAvailable(EABase EASTL)
+
+if(TARGET EASTL)
+	message(STATUS "Configuring EASTL...")
+
+	target_compile_definitions(EASTL PRIVATE
+		$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:
+			EASTL_ASSERT_ENABLED=1
+			EASTL_DEBUG=1
+		>
+		$<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>>:
+			EASTL_ASSERT_ENABLED=0
+			EASTL_DEBUG=0
+		>
+	)
+endif()
+
+# Group Dependencies
+set_property(TARGET EABase PROPERTY FOLDER "dependencies")
+set_property(TARGET EASTL PROPERTY FOLDER "dependencies")
 
 # Optional: allow folder grouping in IDEs like Visual Studio
-if(ENABLE_IDE_FOLDERS)
+if(ARES_ENABLE_IDE_FOLDERS)
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif()
 
 # Add subdirectories
 add_subdirectory(modules/launcher)
 add_subdirectory(modules/core)
+
+#/******************************************************/
+#/*               User Project Creation                */
+#/******************************************************/
 
 # Add project
 if(NOT EXISTS "${ARES_PROJECT_DIR}")
@@ -157,7 +225,7 @@ set_target_properties(${ARES_PROJECT_NAME_UNDERSCORE} PROPERTIES
 
 # Set subsystem depending on user option
 if(WIN32)
-	if(ENABLE_CONSOLE_APP)
+	if(ARES_ENABLE_CONSOLE_APP)
 		set_target_properties(${ARES_PROJECT_CONFIG_NAME_UNDERSCORE} PROPERTIES WIN32_EXECUTABLE OFF)
 	else()
 		set_target_properties(${ARES_PROJECT_CONFIG_NAME_UNDERSCORE} PROPERTIES WIN32_EXECUTABLE ON)
