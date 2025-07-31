@@ -1,6 +1,6 @@
 #include <Windows.h>
-#include "entry_point.h"
-#include "platform.h"
+#include "entry_point/entry_point.h"
+#include "entry_point/platform.h"
 
 #if AR_PLATFORM_WINDOWS
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
