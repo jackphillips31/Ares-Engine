@@ -2,7 +2,7 @@
 #include "launcher/entry_point.h"
 #include "launcher/platform.h"
 
-#if AR_PLATFORM_WINDOWS
+#if ARES_PLATFORM_WINDOWS
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 {
 	int argc = 0;
