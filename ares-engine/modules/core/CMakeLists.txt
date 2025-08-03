@@ -16,34 +16,22 @@ else()
 endif()
 
 # Find all .cpp and .h files
-file(GLOB_RECURSE CORE_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-)
-file(GLOB_RECURSE CORE_PRIVATE_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-)
-file(GLOB_RECURSE CORE_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
-)
+file(GLOB_RECURSE CORE_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE CORE_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
 
 # Include source files and headers, maintaining folder structure
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Project Files" FILES ${CORE_SOURCE_FILES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Project Files" FILES ${CORE_PRIVATE_HEADER_FILES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Project Files" FILES ${CORE_HEADER_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${CORE_SOURCE_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${CORE_HEADER_FILES})
 
 # Add sources
 target_sources(ares_core PRIVATE
 	${CORE_SOURCE_FILES}
-	${CORE_PRIVATE_HEADER_FILES}
 	${CORE_HEADER_FILES}
 )
 
 # Include directory
 target_include_directories(ares_core
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_include_directories(ares_core
-	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 # 3rd Party Libraries

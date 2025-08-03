@@ -1,5 +1,5 @@
 #ifndef ARES_LAUNCHER_ENTRY_POINT_H
-#define ARES_MAIN_H
+#define ARES_LAUNCHER_ENTRY_POINT_H
 
 int ares_main(int argc, char** argv)
 {
