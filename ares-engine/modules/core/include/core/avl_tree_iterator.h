@@ -1,7 +1,7 @@
 #ifndef ARES_CORE_AVL_TREE_ITERATOR_H
 #define ARES_CORE_AVL_TREE_ITERATOR_H
 #include <EASTL/iterator.h>
-#include <core/data/avl_node.h>
+#include <core/avl_node.h>
 
 namespace ares::core {
 
