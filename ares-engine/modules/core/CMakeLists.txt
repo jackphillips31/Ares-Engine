@@ -42,6 +42,4 @@ target_link_libraries(ares_core
 
 # Properties
 set_target_properties(ares_core PROPERTIES FOLDER "modules")
-set_target_properties(ares_core PROPERTIES
-	OUTPUT_NAME core
-)
+set_target_properties(ares_core PROPERTIES OUTPUT_NAME core)
