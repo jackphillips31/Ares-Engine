@@ -5,7 +5,7 @@
 
 namespace ares::core {
 
-	class allocator_base;
+	class allocator;
 
 	class ARES_CORE_API allocator_manager
 	{
@@ -20,7 +20,7 @@ namespace ares::core {
 		void unregister_allocator();
 
 		template <typename T>
-		allocator_base* get_allocator();
+		allocator* get_allocator();
 
 	private:
 		struct allocator_entry
@@ -29,7 +29,7 @@ namespace ares::core {
 			allocator_entry(allocator_entry&& other) noexcept;
 			allocator_entry& operator=(allocator_entry&& other) noexcept;
 
-			allocator_base* allocator = nullptr;
+			allocator* allocator = nullptr;
 			size_t hash_id = 0;
 			bool occupied = false;
 		};

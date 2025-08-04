@@ -5,11 +5,11 @@ namespace ares::core {
 
 	class virtual_memory_manager;
 
-	class allocator_base
+	class allocator
 	{
 	public:
-		allocator_base(virtual_memory_manager* vmm) : m_virtual_memory_manager(vmm) {}
-		virtual ~allocator_base() = default;
+		allocator(virtual_memory_manager* vmm) : m_virtual_memory_manager(vmm) {}
+		virtual ~allocator() = default;
 
 		virtual void* allocate(size_t size) = 0;
 		virtual void* allocate(size_t size, size_t alignment) = 0;
