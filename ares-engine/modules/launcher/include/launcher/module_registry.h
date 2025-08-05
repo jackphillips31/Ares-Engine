@@ -23,7 +23,7 @@ public:
 	module* create(const std::string& name);
 
 private:
-	std::unordered_map<std::string, module_factory> m_factories;
+	std::unordered_map<std::string, module_factory> factories_;
 };
 
 #endif // ARES_LAUNCHER_MODULE_REGISTRY_H

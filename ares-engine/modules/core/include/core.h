@@ -12,6 +12,7 @@
 // Memory
 #include "core/allocator.h"
 #include "core/allocator_manager.h"
+#include "core/sys_allocator.h"
 
 #include "core/type_traits.h"
 #include "core/test.h"

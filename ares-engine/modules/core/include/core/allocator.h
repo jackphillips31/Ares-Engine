@@ -17,7 +17,7 @@ namespace ares::core {
 
 	private:
 		virtual_memory_manager* m_virtual_memory_manager;
-	}
+	};
 
 }
 

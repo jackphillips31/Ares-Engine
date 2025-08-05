@@ -61,25 +61,25 @@ namespace ares::core {
 		avl_node* minimum(avl_node* node) const;
 
 	private:
-		avl_node* m_node = nullptr;
+		avl_node* node_ = nullptr;
 		template <typename, typename> friend class avl_tree_iterator;
 	};
 
 	template <typename avl_node, typename value>
 	inline avl_tree_iterator<avl_node, value>::avl_tree_iterator()
-		: m_node(nullptr)
+		: node_(nullptr)
 	{
 	}
 
 	template <typename avl_node, typename value>
 	inline avl_tree_iterator<avl_node, value>::avl_tree_iterator(avl_node* node)
-		: m_node(node)
+		: node_(node)
 	{
 	}
 
 	template <typename avl_node, typename value>
 	inline avl_tree_iterator<avl_node, value>::avl_tree_iterator(const avl_tree_iterator<avl_node, value>& other)
-		: m_node(other.m_node)
+		: node_(other.node_)
 	{
 	}
 
@@ -88,7 +88,7 @@ namespace ares::core {
 	{
 		if (this != &other)
 		{
-			m_node = other.m_node;
+			node_ = other.node_;
 		}
 		return *this;
 	}
@@ -96,38 +96,38 @@ namespace ares::core {
 	template <typename avl_node, typename value>
 	template <typename other_node, typename other_value, typename>
 	inline avl_tree_iterator<avl_node, value>::avl_tree_iterator(const avl_tree_iterator<other_node, other_value>& other)
-		: m_node(other.m_node)
+		: node_(other.node_)
 	{
 	}
 
 	template <typename avl_node, typename value>
 	inline typename avl_tree_iterator<avl_node, value>::pointer avl_tree_iterator<avl_node, value>::operator->() const
 	{
-		return &m_node->data;
+		return &node_->data;
 	}
 
 	template <typename avl_node, typename value>
 	inline typename avl_tree_iterator<avl_node, value>::reference avl_tree_iterator<avl_node, value>::operator*() const
 	{
-		return m_node->data;
+		return node_->data;
 	}
 
 	template <typename avl_node, typename value>
 	inline avl_tree_iterator<avl_node, value>& avl_tree_iterator<avl_node, value>::operator++()
 	{
-		if (m_node->right)
+		if (node_->right)
 		{
-			m_node = minimum(m_node->right);
+			node_ = minimum(node_->right);
 		}
 		else
 		{
-			avl_node* parent = m_node->parent;
-			while (parent && m_node == parent->right)
+			avl_node* parent = node_->parent;
+			while (parent && node_ == parent->right)
 			{
-				m_node = parent;
+				node_ = parent;
 				parent = parent->parent;
 			}
-			m_node = parent;
+			node_ = parent;
 		}
 		return *this;
 	}
@@ -143,19 +143,19 @@ namespace ares::core {
 	template <typename avl_node, typename value>
 	inline avl_tree_iterator<avl_node, value>& avl_tree_iterator<avl_node, value>::operator--()
 	{
-		if (m_node->left)
+		if (node_->left)
 		{
-			m_node = maximum(m_node->left);
+			node_ = maximum(node_->left);
 		}
 		else
 		{
-			avl_node* parent = m_node->parent;
-			while (parent && m_node == parent->left)
+			avl_node* parent = node_->parent;
+			while (parent && node_ == parent->left)
 			{
-				m_node = parent;
+				node_ = parent;
 				parent = parent->parent;
 			}
-			m_node = parent;
+			node_ = parent;
 		}
 		return *this;
 	}
@@ -171,19 +171,19 @@ namespace ares::core {
 	template <typename avl_node, typename value>
 	inline bool avl_tree_iterator<avl_node, value>::operator==(const avl_tree_iterator& other) const
 	{
-		return m_node == other.m_node;
+		return node_ == other.node_;
 	}
 
 	template <typename avl_node, typename value>
 	inline bool avl_tree_iterator<avl_node, value>::operator!=(const avl_tree_iterator& other) const
 	{
-		return m_node != other.m_node;
+		return node_ != other.node_;
 	}
 
 	template <typename avl_node, typename value>
 	inline avl_node* avl_tree_iterator<avl_node, value>::get_node() const
 	{
-		return m_node;
+		return node_;
 	}
 
 	template <typename avl_node, typename value>

@@ -10,8 +10,12 @@
 
 namespace ares::core {
 
-	template <typename T>
-	class system_allocator;
+	namespace internal {
+
+		template <typename T>
+		class sys_allocator;
+
+	}
 
 	template <typename key, typename value = void, typename allocator = void>
 	class avl_tree
@@ -26,10 +30,7 @@ namespace ares::core {
 		using key_compare = eastl::less<key>;
 		using mapped_type = value;
 		using value_type = eastl::conditional_t<eastl::is_void_v<value>, key, eastl::pair<const key, value>>;
-		// Allocator system not implemented yet
-		// temporary void for all avl_tree's
-		//using allocator_type = eastl::conditional_t<eastl::is_void_v<allocator>, eastl::monostate, system_allocator<allocator>>;
-		using allocator_type = eastl::conditional_t<eastl::is_void_v<allocator>, eastl::monostate, eastl::monostate>;
+		using allocator_type = eastl::conditional_t<eastl::is_void_v<allocator>, eastl::monostate, internal::sys_allocator<allocator>>;
 		using size_type = std::size_t;
 		using difference_type = std::ptrdiff_t;
 
@@ -55,15 +56,15 @@ namespace ares::core {
 		avl_tree(avl_tree&& other) noexcept;
 		avl_tree& operator=(avl_tree&& other) noexcept;
 
-		inline node* root() const { return m_root; }
+		inline node* root() const { return root_; }
 
 		// STL/EASTL methods
 		// Iterators
-		iterator begin() noexcept { return iterator(minimum(m_root)); }
+		iterator begin() noexcept { return iterator(minimum(root_)); }
 		iterator end() noexcept { return iterator(nullptr); }
-		const_iterator begin() const noexcept { return const_iterator(minimum(m_root)); }
+		const_iterator begin() const noexcept { return const_iterator(minimum(root_)); }
 		const_iterator end() const noexcept { return const_iterator(nullptr); }
-		const_iterator cbegin() const noexcept { return const_iterator(minimum(m_root)); }
+		const_iterator cbegin() const noexcept { return const_iterator(minimum(root_)); }
 		const_iterator cend() const noexcept { return const_iterator(nullptr); }
 		reverse_iterator rbegin() noexcept { return reverse_iterator(begin()); }
 		reverse_iterator rend() noexcept { return reverse_iterator(end()); }
@@ -73,18 +74,18 @@ namespace ares::core {
 		const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
 		// Capacity
-		size_type size() const noexcept { return m_size; }
-		bool empty() const noexcept { return m_size == 0 || m_root == nullptr; }
+		size_type size() const noexcept { return size_; }
+		bool empty() const noexcept { return size_ == 0 || root_ == nullptr; }
 
 		// Modifiers
-		void clear() { destroy_node(m_root); }
+		void clear() { destroy_node(root_); }
 		template <typename = eastl::enable_if_t<!is_allocator_void>> pair_type insert(const value_type& key);
 		template <typename = eastl::enable_if_t<!is_allocator_void>> pair_type insert(value_type&& key);
 		template <typename = eastl::enable_if_t<is_allocator_void>> pair_type insert(node* node_arg);
 		iterator erase(iterator pos);
 		iterator erase(iterator first, iterator last);
-		size_type erase(const key_type& key) { return delete_internal(m_root, key) ? 1 : 0; }
-		size_type erase(key_type&& key) { return delete_internal(m_root, eastl::move(key)) ? 1 : 0; }
+		size_type erase(const key_type& key) { return delete_internal(root_, key) ? 1 : 0; }
+		size_type erase(key_type&& key) { return delete_internal(root_, eastl::move(key)) ? 1 : 0; }
 		template <typename = eastl::enable_if_t<is_allocator_void>> size_type erase(node* node_arg);
 
 		// Lookup
@@ -96,6 +97,9 @@ namespace ares::core {
 		const_iterator lower_bound(const key_type& key) const { return const_iterator(lower_bound_internal(key)); }
 		iterator upper_bound(const key_type& key) { return iterator(upper_bound_internal(key)); }
 		const_iterator upper_bound(const key_type& key) const { return const_iterator(upper_bound_internal(key)); }
+
+		// Other
+		allocator_type get_allocator() const { return allocator_; }
 
 	private:
 		template <typename = eastl::enable_if_t<!is_allocator_void>> node* allocate_node();
@@ -132,10 +136,10 @@ namespace ares::core {
 		*/
 	
 	private:
-		node* m_root = nullptr;
-		size_type m_size = 0;
-		key_compare m_compare;
-		allocator_type m_allocator;
+		node* root_ = nullptr;
+		size_type size_ = 0;
+		key_compare compare_;
+		allocator_type allocator_;
 	};
 
 	//
@@ -143,14 +147,14 @@ namespace ares::core {
 	//
 	template <typename key, typename value, typename allocator>
 	inline avl_tree<key, value, allocator>::avl_tree(avl_tree<key, value, allocator>&& other) noexcept
-		: m_root(eastl::exchange(other.m_root, nullptr))
-		m_size(eastl::exchange(other.m_size, 0))
-		m_compare(eastl::move(other.m_compare)),
-		m_allocator()
+		: root_(eastl::exchange(other.root_, nullptr))
+		size_(eastl::exchange(other.size_, 0))
+		compare_(eastl::move(other.compare_)),
+		allocator_()
 	{
 			if constexpr (!is_allocator_void)
 			{
-				m_allocator = other.m_allocator;
+				allocator_ = other.allocator_;
 			}
 	}
 
@@ -161,13 +165,13 @@ namespace ares::core {
 		{
 			clear();
 
-			m_root = eastl::exchange(other.m_root, nullptr);
-			m_size = eastl::exchange(other.m_size, 0);
-			m_compare = eastl::move(other.m_compare);
+			root_ = eastl::exchange(other.root_, nullptr);
+			size_ = eastl::exchange(other.size_, 0);
+			compare_ = eastl::move(other.compare_);
 
 			if constexpr (!is_allocator_void)
 			{
-				m_allocator = other.m_allocator;
+				allocator_ = other.allocator_;
 			}
 		}
 		return *this;
@@ -187,7 +191,7 @@ namespace ares::core {
 		}
 
 		bool inserted = false;
-		node* result = insert_internal(m_root, node_insert, inserted);
+		node* result = insert_internal(root_, node_insert, inserted);
 
 		if (!inserted)
 		{
@@ -209,7 +213,7 @@ namespace ares::core {
 		}
 
 		bool inserted = false;
-		node* result = insert_internal(m_root, node_insert, inserted);
+		node* result = insert_internal(root_, node_insert, inserted);
 
 		if (!inserted)
 		{
@@ -236,7 +240,7 @@ namespace ares::core {
 
 		node_arg->parent_tree = static_cast<void*>(this);
 		bool inserted = false;
-		node* result = insert_internal(m_root, node_arg, inserted);
+		node* result = insert_internal(root_, node_arg, inserted);
 
 		return { iterator(result), inserted };
 	}
@@ -256,7 +260,7 @@ namespace ares::core {
 		}
 		
 		pos++;
-		delete_node_internal(m_root, node_erase);
+		delete_node_internal(root_, node_erase);
 		return pos;
 	}
 
@@ -279,7 +283,7 @@ namespace ares::core {
 			throw std::invalid_argument("Tried to erase a node that doesn't belong to this tree.");
 		}
 
-		return delete_node_internal(m_root, node_arg) ? 1 : 0;
+		return delete_node_internal(root_, node_arg) ? 1 : 0;
 	}
 
 	//
@@ -289,7 +293,7 @@ namespace ares::core {
 	template <typename key, typename value, typename allocator>
 	inline typename avl_tree<key, value, allocator>::iterator avl_tree<key, value, allocator>::find(const key_type& key) const
 	{
-		if (node* node_find = find_node_internal(m_root, key))
+		if (node* node_find = find_node_internal(root_, key))
 		{
 			return iterator(node_find);
 		}
@@ -307,7 +311,7 @@ namespace ares::core {
 	template <typename key, typename value, typename allocator>
 	inline typename avl_tree<key, value, allocator>::const_iterator avl_tree<key, value, allocator>::find(const key_type& key) const
 	{
-		if (node* node_find = find_node_internal(m_root, key))
+		if (node* node_find = find_node_internal(root_, key))
 		{
 			return const_iterator(node_find);
 		}
@@ -323,7 +327,7 @@ namespace ares::core {
 	template <typename>
 	inline typename avl_tree<key, value, allocator>::node* avl_tree<key, value, allocator>::allocate_node()
 	{
-		void* mem = m_allocator.allocate(sizeof(node), alignof(node));
+		void* mem = allocator_.allocate(sizeof(node), alignof(node));
 		if (!mem) return nullptr;
 		node* result = new (mem) node();
 		result->parent_tree = static_cast<void*>(this);
@@ -334,7 +338,7 @@ namespace ares::core {
 	template <typename>
 	inline typename avl_tree<key, value, allocator>::node* avl_tree<key, value, allocator>::allocate_node(const value_type& key_value)
 	{
-		void* mem = m_allocator.allocate(sizeof(node), alignof(node));
+		void* mem = allocator_.allocate(sizeof(node), alignof(node));
 		if (!mem) return nullptr;
 		node* result = new (mem) node(key_value);
 		result->parent_tree = static_cast<void*>(this);
@@ -345,7 +349,7 @@ namespace ares::core {
 	template <typename>
 	inline typename avl_tree<key, value, allocator>::node* avl_tree<key, value, allocator>::allocate_node(value_type&& key_value)
 	{
-		void* mem = m_allocator.allocate(sizeof(node), alignof(node));
+		void* mem = allocator_.allocate(sizeof(node), alignof(node));
 		if (!mem) return nullptr;
 		node* result = new (mem) node(eastl::move(key_value));
 		result->parent_tree = static_cast<void*>(this);
@@ -359,7 +363,7 @@ namespace ares::core {
 		if (node_arg)
 		{
 			node_arg->~node();
-			m_allocator.deallocate(node_arg, sizeof(node));
+			allocator_.deallocate(node_arg, sizeof(node));
 		}
 	}
 
@@ -450,7 +454,7 @@ namespace ares::core {
 			root = node_arg;
 			node_arg->parent = nullptr;
 			inserted = true;
-			m_size++;
+			size_++;
 			return node_arg;
 		}
 
@@ -484,26 +488,26 @@ namespace ares::core {
 				}
 			}();
 
-			if (m_compare(node_key, current_key))
+			if (compare_(node_key, current_key))
 			{
 				if (!current->left)
 				{
 					current->left = node_arg;
 					node_arg->parent = current;
 					inserted = true;
-					m_size++;
+					size_++;
 					break;
 				}
 				current = current->left;
 			}
-			else if (m_compare(current_key, node_key))
+			else if (compare_(current_key, node_key))
 			{
 				if (!current->right)
 				{
 					current->right = node_arg;
 					node_arg->parent = current;
 					inserted = true;
-					m_size++;
+					size_++;
 					break;
 				}
 				current = current->right;
@@ -669,7 +673,7 @@ namespace ares::core {
 		node_arg->parent = nullptr;
 		node_arg->height = 0;
 		node_arg->parent_tree = nullptr;
-		m_size--;
+		size_--;
 		return true;
 	}
 
@@ -706,7 +710,7 @@ namespace ares::core {
 					deallocate_node(to_delete);
 				}
 
-				m_size--;
+				size_--;
 
 				if (current)
 				{
@@ -721,7 +725,7 @@ namespace ares::core {
 				}
 				else
 				{
-					m_root = nullptr;
+					root_ = nullptr;
 				}
 			}
 		}
@@ -732,7 +736,7 @@ namespace ares::core {
 
 			if (!parent->parent)
 			{
-				m_root = parent;
+				root_ = parent;
 			}
 
 			parent = parent->parent;
@@ -841,7 +845,7 @@ namespace ares::core {
 
 			if (key == current_key) return root;
 
-			if (m_compare(key, current_key))
+			if (compare_(key, current_key))
 			{
 				root = root->left;
 			}
@@ -856,7 +860,7 @@ namespace ares::core {
 	template <typename key, typename value, typename allocator>
 	inline typename avl_tree<key, value, allocator>::node* avl_tree<key, value, allocator>::lower_bound_internal(const key_type& key) const
 	{
-		node* current = m_root;
+		node* current = root_;
 		node* result = nullptr;
 
 		while (current)
@@ -878,7 +882,7 @@ namespace ares::core {
 				return current;
 			}
 
-			if (m_compare(key, current_key))
+			if (compare_(key, current_key))
 			{
 				result = current;
 				current = current->left;
@@ -894,7 +898,7 @@ namespace ares::core {
 	template <typename key, typename value, typename allocator>
 	inline typename avl_tree<key, value, allocator>::node* avl_tree<key, value, allocator>::upper_bound_internal(const key_type& key) const
 	{
-		node* current = m_root;
+		node* current = root_;
 		node* result = nullptr;
 
 		while (current)
@@ -911,7 +915,7 @@ namespace ares::core {
 				}
 			}();
 
-			if (m_compare(key, current_key))
+			if (compare_(key, current_key))
 			{
 				result = current;
 				current = current->left;

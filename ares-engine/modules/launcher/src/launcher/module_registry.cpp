@@ -8,11 +8,11 @@ module_registry& module_registry::get()
 
 void module_registry::register_module(const std::string& name, module_factory factory)
 {
-	m_factories[name] = factory;
+	factories_[name] = factory;
 }
 
 module* module_registry::create(const std::string& name)
 {
-	auto it = m_factories.find(name);
-	return it != m_factories.end() ? it->second() : nullptr;
+	auto it = factories_.find(name);
+	return it != factories_.end() ? it->second() : nullptr;
 }
