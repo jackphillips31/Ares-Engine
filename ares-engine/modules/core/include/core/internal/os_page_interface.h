@@ -1,12 +1,12 @@
-#ifndef ARES_CORE_PAGE_ALLOCATOR_H
-#define ARES_CORE_PAGE_ALLOCATOR_H
+#ifndef ARES_CORE_OS_PAGE_INTERFACE_H
+#define ARES_CORE_OS_PAGE_INTERFACE_H
 
 namespace ares::core::internal {
 
-	class page_allocator
+	class os_page_interface
 	{
 	public:
-		virtual ~page_allocator() = default;
+		virtual ~os_page_interface() = default;
 
 		virtual size_t page_size() const = 0;
 		virtual void* reserve_memory(size_t size) = 0;
@@ -15,8 +15,8 @@ namespace ares::core::internal {
 		virtual bool release_memory(void* address, size_t size) = 0;
 	};
 
-	page_allocator* get_page_allocator();
+	os_page_interface* get_os_page_interface();
 
 }
 
-#endif // ARES_CORE_PAGE_ALLOCATOR_H
+#endif // ARES_CORE_os_page_interface_H
