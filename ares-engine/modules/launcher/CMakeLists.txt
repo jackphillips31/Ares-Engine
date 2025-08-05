@@ -12,14 +12,32 @@ add_library(ares_launcher STATIC)
 file(GLOB_RECURSE ENTRY_POINT_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE ENTRY_POINT_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
 
+# Remove platform-specific files
+list(FILTER ENTRY_POINT_SOURCE_FILES EXCLUDE REGEX ".*/src/launcher/platform/.*")
+list(FILTER ENTRY_POINT_HEADER_FILES EXCLUDE REGEX ".*/include/launcher/platform/.*")
+
+# Platform specific globs
+if(WIN32)
+	file(GLOB_RECURSE ENTRY_POINT_PLATFORM_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/platform/windows/*.cpp)
+	file(GLOB_RECURSE ENTRY_POINT_PLATFORM_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/launcher/platform/windows/*.h)
+elseif(UNIX)
+	file(GLOB_RECURSE ENTRY_POINT_PLATFORM_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/platform/unix/*.cpp)
+	file(GLOB_RECURSE ENTRY_POINT_PLATFORM_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/launcher/platform/unix/*.h)
+endif()
+
+# Combine all files
+set (ENTRY_POINT_ALL_SOURCE_FILES ${ENTRY_POINT_SOURCE_FILES} ${ENTRY_POINT_PLATFORM_SOURCE_FILES})
+set (ENTRY_POINT_ALL_HEADER_FILES ${ENTRY_POINT_HEADER_FILES} ${ENTRY_POINT_PLATFORM_HEADER_FILES})
+
+
 # Include source files and headers, maintaining folder structure
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${ENTRY_POINT_SOURCE_FILES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${ENTRY_POINT_HEADER_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${ENTRY_POINT_ALL_SOURCE_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${ENTRY_POINT_ALL_HEADER_FILES})
 
 # Add sources
 target_sources(ares_launcher PRIVATE
-	${ENTRY_POINT_SOURCE_FILES}
-	${ENTRY_POINT_HEADER_FILES}
+	${ENTRY_POINT_ALL_SOURCE_FILES}
+	${ENTRY_POINT_ALL_HEADER_FILES}
 )
 
 # Include directory

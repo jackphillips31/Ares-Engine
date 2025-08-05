@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include "launcher/entry_point.h"
-#include "launcher/platform.h"
+#include "core/platform.h"
 
 #if ARES_PLATFORM_WINDOWS
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
