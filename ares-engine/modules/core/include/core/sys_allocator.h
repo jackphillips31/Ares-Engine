@@ -12,10 +12,11 @@ namespace ares::core::internal {
 	private:
 		static_assert(eastl::is_base_of<allocator, T>::value, "Allocator must derive from 'allocator'!");
 	public:
-		sys_allocator(const char* name = EASTL_NAME_VAL(EASTL_ALLOCATOR_DEFAULT_NAME))
-			: name_(name), allocator_(nullptr)
+		sys_allocator(
+			const char* name = EASTL_NAME_VAL(EASTL_ALLOCATOR_DEFAULT_NAME),
+			allocator* alloc = get_allocator_manager.get_allocator<T>()
+		)	: name_(name), allocator_(alloc)
 		{
-			allocator_ = get_allocator_manager().get_allocator<T>();
 		}
 		~sys_allocator() = default;
 		sys_allocator(const sys_allocator& other)
