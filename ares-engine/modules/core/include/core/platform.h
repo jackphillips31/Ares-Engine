@@ -530,15 +530,15 @@
 /******************************************************/
 /*   Pointer size detection using predefined macros   */
 /******************************************************/
-#ifndef AR_PLATFORM_PTR_SIZE
+#ifndef ARES_PLATFORM_PTR_SIZE
 	#if defined(__WORDSIZE) // Defined by some variations of GCC.
-		#define AR_PLATFORM_PTR_SIZE ((__WORDSIZE) / 8)
+		#define ARES_PLATFORM_PTR_SIZE ((__WORDSIZE) / 8)
 	#elif defined(_WIN64) || defined(__LP64__) || defined(_LP64) || defined(_M_IA64) || defined(__ia64__) || defined(__arch64__) || defined(__aarch64__) || defined(__mips64__) || defined(__64BIT__) || defined(__Ptr_Is_64)
-		#define AR_PLATFORM_PTR_SIZE 8
+		#define ARES_PLATFORM_PTR_SIZE 8
 	#elif defined(__CC_ARM) && (__sizeof_ptr == 8)
-		#define AR_PLATFORM_PTR_SIZE 8
+		#define ARES_PLATFORM_PTR_SIZE 8
 	#else
-		#define AR_PLATFORM_PTR_SIZE 4
+		#define ARES_PLATFORM_PTR_SIZE 4
 	#endif
 #endif
 
@@ -546,23 +546,23 @@
 /******************************************************/
 /*                Word Size Detection                 */
 /******************************************************/
-#ifndef AR_PLATFORM_WORD_SIZE
-	#define AR_PLATFORM_WORD_SIZE AR_PLATFORM_PTR_SIZE
+#ifndef ARES_PLATFORM_WORD_SIZE
+	#define ARES_PLATFORM_WORD_SIZE ARES_PLATFORM_PTR_SIZE
 #endif
 
 
 /******************************************************/
 /*         Minimum Alloc Alignment Detection          */
 /******************************************************/
-#ifndef AR_PLATFORM_MIN_MALLOC_ALIGNMENT
-	#if defined(AR_PLATFORM_APPLE)
-		#define AR_PLATFORM_MIN_MALLOC_ALIGNMENT 16
-	#elif defined(AR_PLATFORM_ANDROID) && defined(AR_PROCESSOR_ARM)
-		#define AR_PLATFORM_MIN_MALLOC_ALIGNMENT 8
-	#elif defined(AR_PLATFORM_ANDROID) && defined(AR_PROCESSOR_X86_64)
-		#define AR_PLATFORM_MIN_MALLOC_ALIGNMENT 8
+#ifndef ARES_PLATFORM_MIN_MALLOC_ALIGNMENT
+	#if defined(ARES_PLATFORM_APPLE)
+		#define ARES_PLATFORM_MIN_MALLOC_ALIGNMENT 16
+	#elif defined(ARES_PLATFORM_ANDROID) && defined(ARES_PROCESSOR_ARM)
+		#define ARES_PLATFORM_MIN_MALLOC_ALIGNMENT 8
+	#elif defined(ARES_PLATFORM_ANDROID) && defined(ARES_PROCESSOR_X86_64)
+		#define ARES_PLATFORM_MIN_MALLOC_ALIGNMENT 8
 	#else
-		#define AR_PLATFORM_MIN_MALLOC_ALIGNMENT (AR_PLATFORM_PTR_SIZE * 2)
+		#define ARES_PLATFORM_MIN_MALLOC_ALIGNMENT (ARES_PLATFORM_PTR_SIZE * 2)
 	#endif
 #endif
 
@@ -570,11 +570,11 @@
 /******************************************************/
 /*             Misaligned Support Level               */
 /******************************************************/
-#ifndef AR_MISALIGNED_SUPPORT_LEVEL
-	#if defined(AR_PROCESSOR_X86_64)
-		#define AR_MISALIGNED_SUPPORT_LEVEL 2
+#ifndef ARES_MISALIGNED_SUPPORT_LEVEL
+	#if defined(ARES_PROCESSOR_X86_64)
+		#define ARES_MISALIGNED_SUPPORT_LEVEL 2
 	#else
-		#define AR_MISALIGNED_SUPPORT_LEVEL 0
+		#define ARES_MISALIGNED_SUPPORT_LEVEL 0
 	#endif
 #endif
 
@@ -582,19 +582,19 @@
 /******************************************************/
 /*                  Cache Line Size                   */
 /******************************************************/
-#ifndef AR_CACHE_LINE_SIZE
-	#if defined(AR_PROCESSOR_X86)
-		#define AR_CACHE_LINE_SIZE 32		// This is the minimum possible value
-	#elif defined(AR_PROCESSOR_X86_64)
-		#define AR_CACHE_LINE_SIZE 64		// This is the minimum possible value
-	#elif defined(AR_PROCESSOR_ARM32)
-		#define AR_CACHE_LINE_SIZE 32		// This varies between implementations and is usually 32 or 64
-	#elif defined(AR_PROCESSOR_ARM64)
-		#define AR_CACHE_LINE_SIZE 64		// Cache line Cortex-A8 (64 bytes) http://shervinemami.info/armAssembly.html however this remains to be mostly an assumption at this stage
-	#elif defined(AR_PLATFORM_WORD_SIZE == 4)
-		#define AR_CACHE_LINE_SIZE 32		// This is the minimum possible value
+#ifndef ARES_CACHE_LINE_SIZE
+	#if defined(ARES_PROCESSOR_X86)
+		#define ARES_CACHE_LINE_SIZE 32		// This is the minimum possible value
+	#elif defined(ARES_PROCESSOR_X86_64)
+		#define ARES_CACHE_LINE_SIZE 64		// This is the minimum possible value
+	#elif defined(ARES_PROCESSOR_ARM32)
+		#define ARES_CACHE_LINE_SIZE 32		// This varies between implementations and is usually 32 or 64
+	#elif defined(ARES_PROCESSOR_ARM64)
+		#define ARES_CACHE_LINE_SIZE 64		// Cache line Cortex-A8 (64 bytes) http://shervinemami.info/armAssembly.html however this remains to be mostly an assumption at this stage
+	#elif defined(ARES_PLATFORM_WORD_SIZE == 4)
+		#define ARES_CACHE_LINE_SIZE 32		// This is the minimum possible value
 	#else
-		#define AR_CACHE_LINE_SIZE 64		// This is the minimum possible value
+		#define ARES_CACHE_LINE_SIZE 64		// This is the minimum possible value
 	#endif
 #endif
 
