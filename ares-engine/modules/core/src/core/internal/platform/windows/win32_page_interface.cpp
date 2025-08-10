@@ -1,6 +1,5 @@
+#include <ares_core_pch.h>
 #include "core/internal/platform/windows/win32_page_interface.h"
-#include <assert.h>
-#include <Windows.h>
 
 namespace ares::core::internal {
 

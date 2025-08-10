@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <ares_launcher_pch.h>
 #include "launcher/entry_point.h"
 #include "core/platform.h"
 

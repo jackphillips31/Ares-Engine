@@ -1,6 +1,6 @@
+#include <ares_launcher_pch.h>
 #include "core/internal/os_page_interface.h"
 #include "core/platform.h"
-#include <new>
 
 #if ARES_PLATFORM_WINDOWS
 #include "core/internal/platform/windows/win32_page_interface.h"

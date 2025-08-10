@@ -1,7 +1,5 @@
+#include <ares_core_pch.h>
 #include "core/internal/platform/unix/unix_page_interface.h"
-#include <assert.h>
-#include <unistd.h>
-#include <sys/mman.h>
 
 constexpr size_t PAGE_SIZE = static_cast<size_t>(sysconf(_SC_PAGESIZE));
 

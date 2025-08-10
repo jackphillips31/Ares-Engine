@@ -1,3 +1,4 @@
+#include <ares_core_pch.h>
 #include "core/test.h"
 
 namespace ares::core {

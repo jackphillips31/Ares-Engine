@@ -1,6 +1,5 @@
 #ifndef ARES_CORE_AVL_TREE_H
 #define ARES_CORE_AVL_TREE_H
-#include <assert.h>
 #include <EASTL/functional.h>
 #include <EASTL/variant.h>
 #include <EASTL/utility.h>

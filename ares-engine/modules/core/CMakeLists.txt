@@ -33,22 +33,34 @@ elseif(UNIX)
 endif()
 
 # Combine all files
-set (CORE_ALL_SOURCE_FILES ${CORE_SOURCE_FILES} ${CORE_PLATFORM_SOURCE_FILES})
-set (CORE_ALL_HEADER_FILES ${CORE_HEADER_FILES} ${CORE_PLATFORM_HEADER_FILES})
+set(CORE_ALL_SOURCE_FILES ${CORE_SOURCE_FILES} ${CORE_PLATFORM_SOURCE_FILES})
+set(CORE_ALL_HEADER_FILES ${CORE_HEADER_FILES} ${CORE_PLATFORM_HEADER_FILES})
+set(CORE_PCH_FILE ${CMAKE_CURRENT_SOURCE_DIR}/src/ares_core_pch.h)
 
 # Include source files and headers, maintaining folder structure
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${CORE_ALL_SOURCE_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Header Files" FILES ${CORE_PCH_FILE})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${CORE_ALL_HEADER_FILES})
+source_group("Generated Files" REGULAR_EXPRESSION ".*cmake_pch\\.(cxx|hxx)$")
 
 # Add sources
 target_sources(ares_core PRIVATE
 	${CORE_ALL_SOURCE_FILES}
 	${CORE_ALL_HEADER_FILES}
+	${CORE_PCH_FILE}
 )
 
 # Include directory
 target_include_directories(ares_core
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+	PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}/include
+	PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+# Precompiled header
+target_precompile_headers(ares_core
+	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/ares_core_pch.h
 )
 
 # 3rd Party Libraries
