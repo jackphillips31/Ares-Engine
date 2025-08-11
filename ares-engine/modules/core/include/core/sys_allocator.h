@@ -32,6 +32,19 @@ namespace ares::core::internal {
 			}
 			return *this;
 		}
+		sys_allocator(sys_allocator&& other) noexcept
+			: name_(eastl::exchange(other.name_, nullptr)), allocator_(eastl::exchange(other.allocator_, nullptr))
+		{
+		}
+		sys_allocator& operator=(sys_allocator&& other) noexcept
+		{
+			if (this != &other)
+			{
+				name_ = eastl::exchange(other.name_, nullptr);
+				allocator_ = eastl::exchange(other.allocator_, nullptr);
+			}
+			return *this;
+		}
 
 		inline void* allocate(size_t size, int flags = 0) { return allocator_->allocate(size); }
 		inline void* allocate(size_t size, size_t alignment, size_t offset = 0, int flags = 0) { return allocator_->allocate(size, alignment); }
