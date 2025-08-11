@@ -56,6 +56,12 @@ target_precompile_headers(ares_launcher
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/ares_launcher_pch.h
 )
 
+# 3rd Party Libraries
+target_link_libraries(ares_launcher
+	PUBLIC
+		EASTL
+)
+
 # Properties
 set_target_properties(ares_launcher PROPERTIES FOLDER "modules")
 set_target_properties(ares_launcher PROPERTIES OUTPUT_NAME launcher)

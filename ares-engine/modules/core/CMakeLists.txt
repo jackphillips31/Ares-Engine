@@ -11,6 +11,9 @@ else()
 	add_library(ares_core SHARED)
 	set_target_properties(ares_core PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/debug/modules
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/release/modules
+		RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_SOURCE_DIR}/bin/release-debug/modules
+		RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_SOURCE_DIR}/bin/release-min/modules
 	)
 	target_compile_definitions(ares_core PRIVATE ARES_CORE_EXPORTS)
 endif()
