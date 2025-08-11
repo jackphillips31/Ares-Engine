@@ -1,6 +1,7 @@
 #include "core/platform.h"
 
 // STL
+#include <cassert>
 #include <new>
 #include <stdexcept>
 

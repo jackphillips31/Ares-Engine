@@ -2,6 +2,7 @@
 
 // STL
 #include <cassert>
+#include <new>
 #include <shared_mutex>
 #include <stdexcept>
 

@@ -288,9 +288,8 @@ namespace ares::core {
 	//
 	// STL/EASTL - LOOKUP
 	//
-	/*
 	template <typename key, typename value, typename allocator>
-	inline typename avl_tree<key, value, allocator>::iterator avl_tree<key, value, allocator>::find(const key_type& key) const
+	inline typename avl_tree<key, value, allocator>::iterator avl_tree<key, value, allocator>::find(const key_type& key)
 	{
 		if (node* node_find = find_node_internal(root_, key))
 		{
@@ -298,13 +297,6 @@ namespace ares::core {
 		}
 
 		return end();
-	}
-
-	//const_iterator find(const key_type& key) const;
-	template <typename key, typename value, typename allocator>
-	inline typename avl_tree<key, value, allocator>::const_iterator avl_tree<key, value, allocator>::find(const key_type& key) const
-	{
-
 	}
 
 	template <typename key, typename value, typename allocator>
@@ -317,7 +309,6 @@ namespace ares::core {
 
 		return cend();
 	}
-	*/
 
 	//
 	// PRIVATE METHODS
@@ -830,7 +821,7 @@ namespace ares::core {
 	{
 		while (root)
 		{
-			const key_type& current_key = []() -> const key_type&
+			const key_type& current_key = [root]() -> const key_type&
 			{
 				if constexpr (eastl::is_void_v<value>)
 				{
@@ -864,7 +855,7 @@ namespace ares::core {
 
 		while (current)
 		{
-			const key_type& current_key = []() -> const key_type&
+			const key_type& current_key = [current]() -> const key_type&
 			{
 				if constexpr (eastl::is_void_v<value>)
 				{
