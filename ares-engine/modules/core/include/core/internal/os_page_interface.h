@@ -1,5 +1,6 @@
 #ifndef ARES_CORE_OS_PAGE_INTERFACE_H
 #define ARES_CORE_OS_PAGE_INTERFACE_H
+#include "core/core_api.h"
 
 namespace ares::core::internal {
 
