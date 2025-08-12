@@ -9,14 +9,12 @@
 
 namespace ares::core {
 
-	namespace internal {
+	class default_allocator;
 
-		template <typename T>
-		class sys_allocator;
+	template <typename T>
+	class sys_allocator;
 
-	}
-
-	template <typename key, typename value = void, typename allocator = void>
+	template <typename key, typename value = void, typename allocator = default_allocator>
 	class avl_tree
 	{
 	private:
@@ -29,7 +27,7 @@ namespace ares::core {
 		using key_compare = eastl::less<key>;
 		using mapped_type = value;
 		using value_type = eastl::conditional_t<eastl::is_void_v<value>, key, eastl::pair<const key, value>>;
-		using allocator_type = eastl::conditional_t<eastl::is_void_v<allocator>, eastl::monostate, internal::sys_allocator<allocator>>;
+		using allocator_type = eastl::conditional_t<eastl::is_void_v<allocator>, eastl::monostate, sys_allocator<allocator>>;
 		using size_type = std::size_t;
 		using difference_type = std::ptrdiff_t;
 
@@ -48,6 +46,7 @@ namespace ares::core {
 		using const_iterator_pair_type = eastl::pair<const_iterator, const_iterator>;
 
 		avl_tree() {}
+		template <typename = eastl::enable_if_t<!is_allocator_void>> avl_tree(allocator_type& alloc) : allocator_(alloc) {}
 		~avl_tree() { clear(); }
 		avl_tree(const avl_tree&) = delete;
 		avl_tree& operator=(const avl_tree&) = delete;
@@ -98,7 +97,7 @@ namespace ares::core {
 		const_iterator upper_bound(const key_type& key) const { return const_iterator(upper_bound_internal(key)); }
 
 		// Other
-		allocator_type get_allocator() const { return allocator_; }
+		template <typename = eastl::enable_if_t<!is_allocator_void>> allocator_type& get_allocator() const { return allocator_; }
 
 	private:
 		template <typename = eastl::enable_if_t<!is_allocator_void>> node* allocate_node();

@@ -1,6 +1,5 @@
 #ifndef ARES_CORE_OS_PAGE_INTERFACE_H
 #define ARES_CORE_OS_PAGE_INTERFACE_H
-#include "core/core_api.h"
 
 namespace ares::core::internal {
 
@@ -16,7 +15,7 @@ namespace ares::core::internal {
 		virtual bool release_memory(void* address, size_t size) = 0;
 	};
 
-	os_page_interface* get_os_page_interface();
+	os_page_interface& get_os_page_interface();
 
 }
 
