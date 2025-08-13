@@ -1,6 +1,7 @@
 #ifndef ARES_CORE_SYS_ALLOCATOR_H
 #define ARES_CORE_SYS_ALLOCATOR_H
 #include <EASTL/type_traits.h>
+#include <EASTL/utility.h>
 #include "core/allocator.h"
 #include "core/allocator_manager.h"
 
@@ -43,7 +44,7 @@ namespace ares::core {
 	{
 		if (!alloc)
 		{
-			allocator_ = get_allocator_manager().get_allocator<T>();
+			allocator_ = get_allocator<T>();
 		}
 	}
 
