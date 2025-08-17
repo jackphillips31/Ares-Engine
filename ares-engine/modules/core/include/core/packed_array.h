@@ -1,8 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2025 Jack Phillips. All rights reserved.
+// 
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef ARES_CORE_PACKED_ARRAY_H
 #define ARES_CORE_PACKED_ARRAY_H
+
 #include <EASTL/algorithm.h>
-#include "core/platform.h"
-#include "core/packed_array_iterator.h"
+#include "core/internal/config.h"
+#include "core/internal/containers/packed_array_iterator.h"
 #include "core/type_traits.h"
 
 namespace ares::core {
@@ -17,40 +24,52 @@ namespace ares::core {
 		using value_type = value;
 		using size_type = std::size_t;
 		using difference_type = std::ptrdiff_t;
+
 		using reference = value_type&;
 		using const_reference = const value_type&;
 		using pointer = value_type*;
 		using const_pointer = const value_type*;
+
 		using iterator = packed_array_iterator<value_type>;
 		using const_iterator = packed_array_iterator<const value_type>;
 		using reverse_iterator = eastl::reverse_iterator<iterator>;
 		using const_reverse_iterator = eastl::reverse_iterator<const_iterator>;
 
 		packed_array() noexcept(eastl::is_nothrow_default_constructible_v<value_type>);
-		packed_array(std::initializer_list<value_type> init) noexcept(eastl::is_nothrow_copy_constructible_v<value_type>&& eastl::is_nothrow_default_constructible_v<value_type>);
 		~packed_array() noexcept { destruct_all(); }
 
+		packed_array(std::initializer_list<value_type> init) noexcept(eastl::is_nothrow_copy_constructible_v<value_type> && eastl::is_nothrow_default_constructible_v<value_type>);
+		packed_array& operator=(std::initializer_list<value_type> init) noexcept(eastl::is_nothrow_copy_assignable_v<value_type>);
 		packed_array(const packed_array& other) noexcept(eastl::is_trivially_copyable_v<value_type> || eastl::is_nothrow_copy_constructible_v<value_type>);
 		packed_array& operator=(const packed_array& other) noexcept(eastl::is_trivially_copyable_v<value_type> || eastl::is_nothrow_copy_assignable_v<value_type>);
 		packed_array(packed_array&& other) noexcept(eastl::is_trivially_copyable_v<value_type> || eastl::is_nothrow_move_constructible_v<value_type>);
 		packed_array& operator=(packed_array&& other) noexcept(eastl::is_trivially_copyable_v<value_type> || eastl::is_nothrow_move_assignable_v<value_type>);
 
+		// STL/EASTL methods
+		// Iterators
 		iterator begin() noexcept { return iterator(buffer_, buffer_, buffer_end_, stride_); }
-		const_iterator begin() const noexcept { return const_iterator(buffer_, buffer_, buffer_end_, stride_); }
-		const_iterator cbegin() const noexcept { return const_iterator(buffer_, buffer_, buffer_end_, stride_); }
-		
 		iterator end() noexcept { return iterator(buffer_end_, buffer_, buffer_end_, stride_); }
+		const_iterator begin() const noexcept { return const_iterator(buffer_, buffer_, buffer_end_, stride_); }
 		const_iterator end() const noexcept { return const_iterator(buffer_end_, buffer_, buffer_end_, stride_); }
+		const_iterator cbegin() const noexcept { return const_iterator(buffer_, buffer_, buffer_end_, stride_); }
 		const_iterator cend() const noexcept { return const_iterator(buffer_end_, buffer_, buffer_end_, stride_); }
-
 		reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
-		const_reverse_iterator rbegin() const noexcept { return const_reverse_iterator(end()); }
-		const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(end()); }
-
 		reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
+		const_reverse_iterator rbegin() const noexcept { return const_reverse_iterator(end()); }
 		const_reverse_iterator rend() const noexcept  { return const_reverse_iterator(begin()); }
+		const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(end()); }
 		const_reverse_iterator crend() const noexcept { return const_reverse_iterator(begin()); }
 
+		// Capacity
+		constexpr size_type size() const noexcept { return size_; }
+		constexpr size_type max_size() const noexcept { return size_; }
+		constexpr bool empty() const noexcept { return size_ == 0; }
+
+		// Modifiers
+		void fill(const_reference fill_value) noexcept(eastl::is_nothrow_copy_assignable_v<value_type>);
+		void swap(packed_array& other) noexcept(eastl::is_trivially_copyable_v<value_type> || is_nothrow_swappable_v<value_type>);
+
+		// Lookup
 		reference at(size_type index);
 		const_reference at(size_type index) const;
 		reference operator[](size_type index) noexcept { return *get_element(index); }
@@ -59,10 +78,6 @@ namespace ares::core {
 		const_reference front() const noexcept { return *get_element(0); }
 		reference back() noexcept { return *get_element(size_ - 1); }
 		const_reference back() const noexcept { return *get_element(size_ - 1); }
-
-		constexpr size_type size() const noexcept { return size_; }
-		constexpr size_type max_size() const noexcept { return size_; }
-		constexpr bool empty() const noexcept { return size_ == 0; }
 
 		// Using pointer arithmetic on this returned pointer can result
 		// in undefined behavior!
@@ -76,9 +91,6 @@ namespace ares::core {
 		const_pointer data() const noexcept { return reinterpret_cast<const_pointer>(buffer_); }
 		size_type stride() noexcept { return stride_; }
 		const size_type stride() const noexcept { return stride_; }
-
-		void fill(const_reference fill_value) noexcept(eastl::is_nothrow_copy_assignable_v<value_type>);
-		void swap(packed_array& other) noexcept(eastl::is_trivially_copyable_v<value_type> || is_nothrow_swappable_v<value_type>);
 
 	private:
 		pointer get_element(size_type index) noexcept;
@@ -140,13 +152,14 @@ namespace ares::core {
 	{
 		size_type i = 0;
 		const size_type limit = static_cast<size_type>(eastl::min(init.size(), size_));
+		auto it = init.begin();
 		if constexpr (!eastl::is_nothrow_copy_constructible_v<value_type> || !eastl::is_nothrow_default_constructible_v<value_type>)
 		{
 			try
 			{
-				for (; i < limit; i++)
+				for (; i < limit; i++, it++)
 				{
-					new (get_element(i)) value_type(*(init.begin() + i));
+					new (get_element(i)) value_type(*it);
 				}
 
 				if constexpr (!eastl::is_trivially_default_constructible_v<value_type>)
@@ -165,9 +178,9 @@ namespace ares::core {
 		}
 		else
 		{
-			for (; i < limit; i++)
+			for (; i < limit; i++, it++)
 			{
-				new (get_element(i)) value_type(*(init.begin() + i));
+				new (get_element(i)) value_type(*it);
 			}
 			if constexpr (!eastl::is_trivially_default_constructible_v<value_type>)
 			{
@@ -177,6 +190,18 @@ namespace ares::core {
 				}
 			}
 		}
+	}
+
+	template <typename value, unsigned int array_size>
+	packed_array<value, array_size>& packed_array<value, array_size>::operator=(std::initializer_list<value_type> init) noexcept(eastl::is_nothrow_copy_assignable_v<value_type>)
+	{
+		const size_type limit = static_cast<size_type>(eastl::min(init.size(), size_));
+		auto it = init.begin();
+		for (size_type i = 0; i < limit; i++, it++)
+		{
+			*get_element(i) = *it;
+		}
+		return *this;
 	}
 
 	template <typename value, unsigned int array_size>
@@ -282,20 +307,6 @@ namespace ares::core {
 	}
 
 	template <typename value, unsigned int array_size>
-	typename packed_array<value, array_size>::reference packed_array<value, array_size>::at(size_type index)
-	{
-		if (index >= size_) throw std::out_of_range("Index out of range.");
-		return *get_element(index);
-	}
-
-	template <typename value, unsigned int array_size>
-	typename packed_array<value, array_size>::const_reference packed_array<value, array_size>::at(size_type index) const
-	{
-		if (index >= size_) throw std::out_of_range("Index out of range.");
-		return *get_element(index);
-	}
-
-	template <typename value, unsigned int array_size>
 	void packed_array<value, array_size>::fill(const_reference fill_value) noexcept(eastl::is_nothrow_copy_assignable_v<value_type>)
 	{
 		for (size_type i = 0; i < size_; i++)
@@ -321,6 +332,20 @@ namespace ares::core {
 				eastl::swap(*get_element(i), *other.get_element(i));
 			}
 		}
+	}
+
+	template <typename value, unsigned int array_size>
+	typename packed_array<value, array_size>::reference packed_array<value, array_size>::at(size_type index)
+	{
+		if (index >= size_) throw std::out_of_range("Index out of range.");
+		return *get_element(index);
+	}
+
+	template <typename value, unsigned int array_size>
+	typename packed_array<value, array_size>::const_reference packed_array<value, array_size>::at(size_type index) const
+	{
+		if (index >= size_) throw std::out_of_range("Index out of range.");
+		return *get_element(index);
 	}
 
 	template <typename value, unsigned int array_size>
@@ -476,6 +501,11 @@ namespace ares::core {
 	{
 		return arr[index];
 	}
+
+	#if ARES_BUILD_DEBUG
+	template <typename value, unsigned int array_size>
+	constexpr typename packed_array<value, array_size>::size_type packed_array<value, array_size>::size_;
+	#endif
 
 }
 

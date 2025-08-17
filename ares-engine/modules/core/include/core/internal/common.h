@@ -4,16 +4,11 @@
 // 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef ARES_CORE_TEST_H
-#define ARES_CORE_TEST_H
+#ifndef ARES_CORE_INTERNAL_COMMON_H
+#define ARES_CORE_INTERNAL_COMMON_H
 
+#include "core/internal/platform.h"
 #include "core/internal/config.h"
-#include "core/internal/engine_api.h"
+#include "core/internal/macros.h"
 
-namespace ares::core {
-
-	ARES_CORE_API int add(int a, int b);
-
-}
-
-#endif // ARES_CORE_TEST_H
+#endif // ARES_CORE_INTERNAL_COMMON_H

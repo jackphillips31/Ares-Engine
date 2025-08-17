@@ -1,6 +1,14 @@
-#ifndef ARES_CORE_UNIX_PAGE_INTERFACE_H
-#define ARES_CORE_UNIX_PAGE_INTERFACE_H
-#include "core/core_api.h"
+///////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2025 Jack Phillips. All rights reserved.
+// 
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef ARES_CORE_INTERNAL_UNIX_PAGE_INTERFACE_H
+#define ARES_CORE_INTERNAL_UNIX_PAGE_INTERFACE_H
+
+#include "core/internal/common.h"
+#include "core/internal/engine_api.h"
 #include "core/internal/os_page_interface.h"
 
 namespace ares::core::internal {
@@ -19,4 +27,4 @@ namespace ares::core::internal {
 
 }
 
-#endif // ARES_CORE_UNIX_PAGE_INTERFACE_H
+#endif // ARES_CORE_INTERNAL_UNIX_PAGE_INTERFACE_H

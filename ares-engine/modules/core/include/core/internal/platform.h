@@ -1,5 +1,11 @@
-#ifndef ARES_LAUNCHER_PLATFORM_H
-#define ARES_LAUNCHER_PLATFORM_H
+///////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2025 Jack Phillips. All rights reserved.
+// 
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef ARES_CORE_INTERNAL_PLATFORM_H
+#define ARES_CORE_INTERNAL_PLATFORM_H
 
 /******************************************************/
 /*     Platform detection using predefined macros     */
@@ -598,4 +604,4 @@
 	#endif
 #endif
 
-#endif // ARES_LAUNCHER_PLATFORM_H
+#endif // ARES_CORE_INTERNAL_PLATFORM_H

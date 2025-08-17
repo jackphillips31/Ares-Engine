@@ -1,7 +1,15 @@
-#ifndef ARES_CORE_PACKED_ARRAY_ITERATOR_H
-#define ARES_CORE_PACKED_ARRAY_ITERATOR_H
+///////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2025 Jack Phillips. All rights reserved.
+// 
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef ARES_CORE_INTERNAL_PACKED_ARRAY_ITERATOR_H
+#define ARES_CORE_INTERNAL_PACKED_ARRAY_ITERATOR_H
+
 #include <EASTL/iterator.h>
 #include <cstdint>
+#include "core/internal/common.h"
 
 namespace ares::core {
 
@@ -257,4 +265,4 @@ namespace ares::core {
 	*/
 }
 
-#endif // ARES_CORE_PACKED_ARRAY_ITERATOR_H
+#endif // ARES_CORE_INTERNAL_PACKED_ARRAY_ITERATOR_H

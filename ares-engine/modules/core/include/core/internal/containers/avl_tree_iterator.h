@@ -1,6 +1,14 @@
-#ifndef ARES_CORE_AVL_TREE_ITERATOR_H
-#define ARES_CORE_AVL_TREE_ITERATOR_H
+///////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2025 Jack Phillips. All rights reserved.
+// 
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef ARES_CORE_INTERNAL_AVL_TREE_ITERATOR_H
+#define ARES_CORE_INTERNAL_AVL_TREE_ITERATOR_H
+
 #include <EASTL/iterator.h>
+#include "core/internal/common.h"
 #include <core/avl_node.h>
 
 namespace ares::core {
@@ -103,7 +111,7 @@ namespace ares::core {
 	template <typename avl_node, typename value>
 	inline typename avl_tree_iterator<avl_node, value>::pointer avl_tree_iterator<avl_node, value>::operator->() const
 	{
-		return &node_->data;
+		return *node_->data;
 	}
 
 	template <typename avl_node, typename value>
@@ -201,4 +209,4 @@ namespace ares::core {
 	}
 }
 
-#endif // ARES_CORE_AVL_TREE_ITERATOR_H
+#endif // ARES_CORE_INTERNAL_AVL_TREE_ITERATOR_H

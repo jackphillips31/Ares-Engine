@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<Type Name="ares::core::avl_tree&lt;*,*,*,*&gt;">
+		<DisplayString>[size={size_}, height={root_ != nullptr ? root_->height : -1}]</DisplayString>
+		<Expand>
+			<Item Name="[root]" Condition="root_ != nullptr">*root_</Item>
+			<Item Name="[root]" Condition="root == nullptr">nullptr</Item>
+			<Item Name="[size]">size_</Item>
+			<Item Name="[compare]">"$T3"</Item>
+			<Item Name="[allocator]">allocator_</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="ares::core::avl_node&lt;*,*&gt;">
+		<DisplayString>[key={data.first}, height={height}]</DisplayString>
+		<Expand>
+			<Item Name="[left child]" Optional="true" Condition="left != nullptr">*left</Item>
+			<Item Name="[left child]" Optional="true" Condition="left == nullptr">nullptr</Item>
+			<Item Name="[right child]" Optional="true" Condition="right != nullptr">*right</Item>
+			<Item Name="[right child]" Optional="true" Condition="right == nullptr">nullptr</Item>
+			<Item Name="[data]">data</Item>
+			<Item Name="[height]">height</Item>
+			<Item Name="[parent]" Optional="true" Condition="parent != nullptr">*parent</Item>
+			<Item Name="[parent]" Optional="true" Condition="parent == nullptr">nullptr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="ares::core::avl_node&lt;*,void&gt;">
+		<DisplayString>[key={data}, height={height}]</DisplayString>
+		<Expand>
+			<Item Name="[left child]" Optional="true" Condition="left != nullptr">*left</Item>
+			<Item Name="[left child]" Optional="true" Condition="left == nullptr">nullptr</Item>
+			<Item Name="[right child]" Optional="true" Condition="right != nullptr">*right</Item>
+			<Item Name="[right child]" Optional="true" Condition="right == nullptr">nullptr</Item>
+			<Item Name="[data]">data</Item>
+			<Item Name="[height]">height</Item>
+			<Item Name="[parent]" Optional="true">*parent</Item>
+			<Item Name="[parent]" Optional="true" Condition="parent == nullptr">nullptr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="ares::core::packed_array&lt;*,*&gt;">
+		<DisplayString>[size={size_}]</DisplayString>
+		<Expand>
+			<IndexListItems>
+				<Size>size_</Size>
+				<ValueNode>*((($T1*)(buffer_ + $i * stride_)))</ValueNode>
+			</IndexListItems>
+		</Expand>
+	</Type>
+
+	<Type Name="ares::core::sys_allocator&lt;*&gt;">
+		<DisplayString>[name={name_, s}, type={"$T1"}]</DisplayString>
+		<Expand>
+			<Item Name="[name]">name_, s</Item>
+			<Item Name="[allocator]">*allocator_</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="ares::core::allocator">
+		<DisplayString>[allocator base]</DisplayString>
+	</Type>
+
+</AutoVisualizer>

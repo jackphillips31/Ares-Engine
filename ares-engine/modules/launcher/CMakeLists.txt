@@ -36,6 +36,9 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Header Files" FILES ${
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${LAUNCHER_ALL_HEADER_FILES})
 source_group("Generated Files" REGULAR_EXPRESSION ".*cmake_pch\\.(cxx||hxx)$")
 
+# Extra files
+set(ARES_CORE_NATVIS_FILE ${CMAKE_SOURCE_DIR}/modules/core/doc/ares-core.natvis)
+
 # Add sources
 target_sources(ares_launcher PRIVATE
 	${LAUNCHER_ALL_SOURCE_FILES}

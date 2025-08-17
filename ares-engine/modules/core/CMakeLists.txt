@@ -39,6 +39,7 @@ endif()
 set(CORE_ALL_SOURCE_FILES ${CORE_SOURCE_FILES} ${CORE_PLATFORM_SOURCE_FILES})
 set(CORE_ALL_HEADER_FILES ${CORE_HEADER_FILES} ${CORE_PLATFORM_HEADER_FILES})
 set(CORE_PCH_FILE ${CMAKE_CURRENT_SOURCE_DIR}/src/ares_core_pch.h)
+set(CORE_NATVIS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/doc/ares-core.natvis)
 
 # Include source files and headers, maintaining folder structure
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${CORE_ALL_SOURCE_FILES})
@@ -51,6 +52,7 @@ target_sources(ares_core PRIVATE
 	${CORE_ALL_SOURCE_FILES}
 	${CORE_ALL_HEADER_FILES}
 	${CORE_PCH_FILE}
+	${CORE_NATVIS_FILE}
 )
 
 # Include directory
